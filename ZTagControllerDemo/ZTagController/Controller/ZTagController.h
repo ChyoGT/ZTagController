@@ -8,9 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+@class ZPagesView, ZPagesViewCell, ZTagController;
+
+@protocol  ZTagControllerDataSource <NSObject>
+
+- (ZPagesViewCell *)tagController:(ZTagController *)tagController pagesView:(ZPagesView *)pagesView cellAtIndex:(NSUInteger)index;
+
+@end
+
 @interface ZTagController : UIViewController
 
 @property (nonatomic, strong) NSArray * tags;
+
+@property (nonatomic, weak) id<ZTagControllerDataSource> dataSource;
 
 + (instancetype)tagControllerWithRootVC:(UIViewController *)rootVC;
 

@@ -8,9 +8,12 @@
 
 #import "ViewController.h"
 #import "ZTagController.h"
+#import "ZPagesViewCell.h"
+#import "ZPagesView.h"
+#import "ZTagConst.h"
 
 
-@interface ViewController ()
+@interface ViewController () <ZTagControllerDataSource>
 
 @end
 
@@ -23,15 +26,21 @@
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    NSArray * tagArray = @[@"推荐", @"营养快线", @"哇哈哈", @"七喜", @"可口可乐", @"美年达", @"东方树叶", @"..."];
+    NSArray * tagArray = @[@"推荐", @"营养快线", @"哇哈哈", @"七喜", @"可口可乐", @"美年达", @"东方树叶", @"百事可乐"];
     
     ZTagController * controller = [ZTagController tagControllerWithRootVC:self];
+    controller.dataSource = self;
     controller.tags = tagArray;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - ZTagControllerDataSource
+- (ZPagesViewCell *)tagController:(ZTagController *)tagController pagesView:(ZPagesView *)pagesView cellAtIndex:(NSUInteger)index {
+    ZPagesViewCell * cell = [pagesView dequeueReusableCellWithIdentifier:@"cell"];
+    if (cell == nil) {
+        cell = [ZPagesViewCell pagesViewCellWithIdentifier:@"cell"];
+    }
+    cell.backgroundColor = ZRandomColor;
+    return cell;
 }
 
 @end

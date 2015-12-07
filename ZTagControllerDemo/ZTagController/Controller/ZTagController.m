@@ -91,10 +91,13 @@
     
     ZPagesViewCell * cell = [pageView dequeueReusableCellWithIdentifier:ZPageReusableIdentifier];
     if (cell == nil) {
-        cell = [[ZPagesViewCell alloc] init];
-        cell.identifier = ZPageReusableIdentifier;
-        cell.backgroundColor = ZRandomColor;
-        cell.frame = pageView.bounds;
+        
+        if ([self.dataSource respondsToSelector:@selector(tagController:pagesView:cellAtIndex:)]) {
+            cell = [self.dataSource tagController:self pagesView:pageView cellAtIndex:index];
+        } else {
+            cell = [[ZPagesViewCell alloc] initWithIdentifier:ZPageReusableIdentifier];
+            cell.backgroundColor = ZRandomColor;
+        }
     }
     return cell;
 }

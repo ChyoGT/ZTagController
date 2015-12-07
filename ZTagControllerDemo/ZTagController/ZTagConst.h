@@ -9,8 +9,6 @@
 #ifndef ZTagConst_h
 #define ZTagConst_h
 
-
-
 #define ZTagButtonWidth 80
 #define ZTagButtonHeight 40
 #define ZTagButtonMargin 10

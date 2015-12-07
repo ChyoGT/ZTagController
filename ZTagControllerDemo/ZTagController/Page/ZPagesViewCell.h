@@ -10,4 +10,7 @@
 
 @interface ZPagesViewCell : UIView
 @property (nonatomic, copy) NSString * identifier;
+
++ (instancetype)pagesViewCellWithIdentifier:(NSString *)identifier;
+- (instancetype)initWithIdentifier:(NSString *)identifier;
 @end
