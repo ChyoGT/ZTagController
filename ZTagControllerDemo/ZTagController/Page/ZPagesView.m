@@ -64,7 +64,6 @@
             if (cell == nil) {
                 cell = [self.dataSource pageView:self cellAtIndex:i];
                 cell.frame = cellFrame;
-                NSLog(@"%@", NSStringFromCGRect(cellFrame));
                 [self addSubview:cell];
                 
                 self.displayingCells[@(i)] = cell;
@@ -86,6 +85,11 @@
     
     ZPagesView * pagesView = (ZPagesView *)object;
     if ([keyPath isEqualToString:@"frame"]) {
+        NSLog(@"keyPath - %@", keyPath);
+        NSLog(@"object - %@", object);
+        NSLog(@"change - %@", change);
+        NSLog(@"context - %@", context);
+        
         self.contentSize = CGSizeMake(self.cellFrames.count * pagesView.frame.size.width, 0);
         
     } else if([keyPath isEqualToString:@"contentSize"]) {

@@ -8,6 +8,7 @@
 
 #import "ZTagsView.h"
 #import "ZTagConst.h"
+#import "ZTagConfigView.h"
 
 #define kAnimationMoveDuration 0.5
 #define kAnimationFontDuration 0.3
@@ -15,6 +16,8 @@
 @interface ZTagsView ()
 
 @property (nonatomic, weak) UIScrollView *tagsScrollView;
+
+@property (nonatomic, weak) UIButton * configButton;
 
 @property (nonatomic, weak) UIButton * currentSelectedButton;
 
@@ -33,7 +36,8 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.tagsScrollView.frame = self.bounds;
+    self.tagsScrollView.frame = CGRectMake(0, 0, self.frame.size.width - ZTagViewHeight, ZTagViewHeight);
+    self.configButton.frame = CGRectMake(CGRectGetMaxX(self.tagsScrollView.frame), 0, ZTagViewHeight, ZTagViewHeight);
 }
 
 #pragma mark - setter
@@ -110,8 +114,19 @@
     return _tagsScrollView;
 }
 
+- (UIButton *)configButton {
+    if (_configButton == nil) {
+        UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self addSubview:button];
+        _configButton = button;
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button setTitle:@"编辑" forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(configButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _configButton;
+}
 
-#pragma mark - 点击Tag触发事件
+#pragma mark - 点击触发事件
 - (void)tagButtonClick:(UIButton *)button {
     
     if (button.isSelected) {
@@ -126,6 +141,10 @@
     if ([self.tagDelegate respondsToSelector:@selector(tagsView:tagDidSelected:)]) {
         [self.tagDelegate tagsView:self tagDidSelected:button.tag];
     }
+}
+
+- (void)configButtonClick {
+    ZTagConfigView * configView = [ZTagConfigView tagConfigView];
 }
 
 #pragma mark - 按钮动画效果

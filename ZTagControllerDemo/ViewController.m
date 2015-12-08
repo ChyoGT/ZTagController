@@ -26,11 +26,12 @@
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    NSArray * tagArray = @[@"推荐", @"营养快线", @"哇哈哈", @"七喜", @"可口可乐", @"美年达", @"东方树叶", @"百事可乐"];
+    NSArray * tagArray = @[@"推荐", @"营养快线", @"哇哈哈", @"七喜", @"可口可乐", @"美年达", @"东方树叶", @"百事可乐", @"苹果", @"香蕉", @"梨", @"橘子", @"西红柿", @"西瓜", @"哈密瓜", @"火龙果", @"葡萄", @"石榴"];
     
     ZTagController * controller = [ZTagController tagControllerWithRootVC:self];
     controller.dataSource = self;
     controller.tags = tagArray;
+    controller.displayTagCount = 5;
 }
 
 #pragma mark - ZTagControllerDataSource

@@ -18,9 +18,7 @@
 
 @end
 
-
 @interface ZTagsView : UIView
-
 
 @property (nonatomic, strong) NSArray * tags;
 @property (nonatomic, assign) NSInteger currentTagIndex;

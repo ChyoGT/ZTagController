@@ -17,6 +17,7 @@
 		B28FC80D1C0EE9D200F8CE89 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B28FC80B1C0EE9D200F8CE89 /* Main.storyboard */; };
 		B28FC80F1C0EE9D200F8CE89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B28FC80E1C0EE9D200F8CE89 /* Assets.xcassets */; };
 		B28FC8121C0EE9D200F8CE89 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B28FC8101C0EE9D200F8CE89 /* LaunchScreen.storyboard */; };
+		B2A6350E1C16E8660096013F /* ZTagConfigView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2A6350D1C16E8660096013F /* ZTagConfigView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,8 @@
 		B28FC80E1C0EE9D200F8CE89 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B28FC8111C0EE9D200F8CE89 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B28FC8131C0EE9D200F8CE89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B2A6350C1C16E8660096013F /* ZTagConfigView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZTagConfigView.h; sourceTree = "<group>"; };
+		B2A6350D1C16E8660096013F /* ZTagConfigView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZTagConfigView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +62,7 @@
 				B22989991C119B87005496EF /* Controller */,
 				B229899C1C119B87005496EF /* Page */,
 				B22989A11C119B87005496EF /* Tag */,
+				B2A6350B1C16E84F0096013F /* TagConfig */,
 			);
 			path = ZTagController;
 			sourceTree = "<group>";
@@ -131,6 +135,15 @@
 				B28FC8031C0EE9D200F8CE89 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B2A6350B1C16E84F0096013F /* TagConfig */ = {
+			isa = PBXGroup;
+			children = (
+				B2A6350C1C16E8660096013F /* ZTagConfigView.h */,
+				B2A6350D1C16E8660096013F /* ZTagConfigView.m */,
+			);
+			path = TagConfig;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -206,6 +219,7 @@
 			files = (
 				B22989A71C119B87005496EF /* ZPagesViewCell.m in Sources */,
 				B22989A61C119B87005496EF /* ZPagesView.m in Sources */,
+				B2A6350E1C16E8660096013F /* ZTagConfigView.m in Sources */,
 				B28FC80A1C0EE9D200F8CE89 /* ViewController.m in Sources */,
 				B22989A51C119B87005496EF /* ZTagController.m in Sources */,
 				B22989A81C119B87005496EF /* ZTagsView.m in Sources */,

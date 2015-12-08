@@ -17,6 +17,9 @@
 @property (nonatomic, weak) ZTagsView * tagsView;
 @property (nonatomic, weak) ZPagesView * pagesView;
 
+@property (nonatomic, strong) NSArray * tagArray;
+@property (nonatomic, strong) NSArray * tagConfigArray;
+
 @end
 
 @implementation ZTagController
@@ -45,7 +48,23 @@
 - (void)setTags:(NSArray *)tags {
     _tags = tags;
     
-    self.tagsView.tags = tags;
+    if (self.displayTagCount != 0) {
+        [self loadData];
+    }
+}
+
+- (void)setDisplayTagCount:(NSUInteger)displayTagCount {
+    _displayTagCount = displayTagCount;
+    
+    if (self.tags) {
+        [self loadData];
+    }
+}
+
+- (void)loadData {
+    
+    self.tagArray = [self.tags objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.displayTagCount - 1)]];
+    self.tagsView.tags = self.tagArray;
     [self.pagesView reloadData];
 }
 
@@ -84,7 +103,7 @@
 
 #pragma mark - ZPagesViewDataSource
 - (NSUInteger)numberOfPagesInPageView:(ZPagesView *)pageView {
-    return self.tags.count;
+    return self.tagArray.count;
 }
 
 - (ZPagesViewCell *)pageView:(ZPagesView *)pageView cellAtIndex:(NSUInteger)index {
