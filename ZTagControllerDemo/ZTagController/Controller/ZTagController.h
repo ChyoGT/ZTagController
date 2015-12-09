@@ -24,9 +24,6 @@
 /** 数据源 */
 @property (nonatomic, weak) id<ZTagControllerDataSource> dataSource;
 
-/** 默认显示的标签数 */
-@property (nonatomic, assign) NSUInteger displayTagCount;
-
 + (instancetype)tagControllerWithRootVC:(UIViewController *)rootVC;
 
 @end

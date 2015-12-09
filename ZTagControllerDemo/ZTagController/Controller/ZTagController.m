@@ -11,14 +11,15 @@
 #import "ZPagesView.h"
 #import "ZPagesViewCell.h"
 #import "ZTagConst.h"
+#import "ZTagConfigView.h"
 
-@interface ZTagController () <ZTagsViewDelegate, ZPagesViewDataSource, ZPagesViewDelegate>
+@interface ZTagController () <ZTagsViewDelegate, ZPagesViewDataSource, ZPagesViewDelegate, ZTagConfigViewDelegate>
 
 @property (nonatomic, weak) ZTagsView * tagsView;
 @property (nonatomic, weak) ZPagesView * pagesView;
+@property (nonatomic, weak) ZTagConfigView * configView;
 
 @property (nonatomic, strong) NSArray * tagArray;
-@property (nonatomic, strong) NSArray * tagConfigArray;
 
 @end
 
@@ -48,27 +49,21 @@
 - (void)setTags:(NSArray *)tags {
     _tags = tags;
     
-    if (self.displayTagCount != 0) {
-        [self loadData];
+    NSMutableArray * tagArray = [[NSMutableArray alloc] init];
+    for (NSUInteger i = 0; i < (tags.count > 6 ? 6 : tags.count); i++) {
+        [tagArray addObject:tags[i]];
     }
-}
-
-- (void)setDisplayTagCount:(NSUInteger)displayTagCount {
-    _displayTagCount = displayTagCount;
+    self.tagArray = tagArray;
     
-    if (self.tags) {
-        [self loadData];
-    }
+    [self loadData];
 }
 
 - (void)loadData {
-    
-    self.tagArray = [self.tags objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.displayTagCount - 1)]];
     self.tagsView.tags = self.tagArray;
     [self.pagesView reloadData];
 }
 
-#pragma mark - 懒加载
+#pragma mark - getter
 - (ZTagsView *)tagsView {
     if (_tagsView == nil) {
         ZTagsView * tagsView = [ZTagsView tagsView];
@@ -92,13 +87,28 @@
     return _pagesView;
 }
 
+- (ZTagConfigView *)configView {
+    if (!_configView) {
+        ZTagConfigView * configView = [ZTagConfigView tagConfigView];
+        UIView * windowView = [UIApplication sharedApplication].keyWindow;
+        [windowView addSubview:configView];
+        _configView = configView;
+        configView.delegate = self;
+    }
+    return _configView;
+}
+
 #pragma mark - ZTagsViewDelegate
 - (void)tagsView:(ZTagsView *)tagsView tagDidSelected:(NSInteger)selectedIndex {
     [self.pagesView goToPageAtIndex:selectedIndex];
 }
 
-- (void)tagsViewSelectedTagDidClick:(ZTagsView *)tagsScrollView {
+- (void)tagsViewSelectedTagDidClick:(ZTagsView *)tagsView {
     
+}
+
+- (void)tagsViewConfigButtonDidClick:(ZTagsView *)tagsView {
+    [self.configView showTagConfigViewWithSelectedTags:self.tagArray tags:self.tags];
 }
 
 #pragma mark - ZPagesViewDataSource
@@ -124,6 +134,12 @@
 #pragma mark - ZPagesViewDelegate
 - (void)pageView:(ZPagesView *)pageView viewDidChangeAtIndex:(NSUInteger)index {
     self.tagsView.currentTagIndex = index;
+}
+
+#pragma mark - ZTagConfigViewDelegate
+- (void)tagConfigView:(ZTagConfigView *)tagConfigView saveTagChangeWithSelectedTags:(NSArray *)selectedTags {
+    self.tagArray = selectedTags;
+    [self loadData];
 }
 
 @end

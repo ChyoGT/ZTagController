@@ -31,7 +31,6 @@
     ZTagController * controller = [ZTagController tagControllerWithRootVC:self];
     controller.dataSource = self;
     controller.tags = tagArray;
-    controller.displayTagCount = 5;
 }
 
 #pragma mark - ZTagControllerDataSource

@@ -8,7 +8,6 @@
 
 #import "ZTagsView.h"
 #import "ZTagConst.h"
-#import "ZTagConfigView.h"
 
 #define kAnimationMoveDuration 0.5
 #define kAnimationFontDuration 0.3
@@ -21,7 +20,7 @@
 
 @property (nonatomic, weak) UIButton * currentSelectedButton;
 
-@property (nonatomic, strong) NSArray * buttons;
+@property (nonatomic, strong) NSMutableArray * buttons;
 
 @end
 
@@ -37,6 +36,15 @@
     [super layoutSubviews];
     
     self.tagsScrollView.frame = CGRectMake(0, 0, self.frame.size.width - ZTagViewHeight, ZTagViewHeight);
+    
+    CGFloat maxX = ZTagButtonMargin;
+    
+    for (int i = 0; i < self.buttons.count; i++) {
+        UIButton * button = self.buttons[i];
+        button.frame = CGRectMake(maxX, 0, ZTagButtonWidth, ZTagButtonHeight);
+        maxX += ZTagButtonWidth + ZTagButtonMargin;
+    }
+    
     self.configButton.frame = CGRectMake(CGRectGetMaxX(self.tagsScrollView.frame), 0, ZTagViewHeight, ZTagViewHeight);
 }
 
@@ -44,47 +52,46 @@
 - (void)setTags:(NSArray *)tags {
     _tags = tags;
     
-    CGFloat contentWidth = ZTagButtonMargin;
-    NSMutableArray * buttons = [[NSMutableArray alloc] init];
+    CGFloat contentSizeWidth = tags.count * ZTagButtonWidth + (tags.count + 1) * ZTagButtonMargin;
+    self.tagsScrollView.contentSize = CGSizeMake(contentSizeWidth, 0);
+    
+    long count = tags.count - self.buttons.count;
+    for (NSUInteger i = 0; i < (count > 0 ? count : -count); i++) {
+        if (count > 0) {
+            [self addTagButton];
+        } else {
+            [self.buttons.lastObject removeFromSuperview];
+            [self.buttons removeLastObject];
+        }
+    }
     
     for (int i = 0; i < tags.count; i++) {
-        
-        UIButton * tagButton = [self createTagButtonWithTitle:tags[i] x:contentWidth index:i];
-        [buttons addObject:tagButton];
-        
-        contentWidth += ZTagButtonWidth + ZTagButtonMargin;
+        [self.buttons[i] setTitle:tags[i] forState:UIControlStateNormal];
     }
     
-    self.buttons = buttons;
-    if (buttons.count > 0) {
-        self.currentSelectedButton = buttons[0];
+    [self setNeedsLayout];
+    if (self.buttons.count > 0) {
+        self.currentSelectedButton = self.buttons[0];
     }
-    self.tagsScrollView.contentSize = CGSizeMake(contentWidth, 0);
 }
 
-
-- (UIButton *)createTagButtonWithTitle:(NSString *)title x:(CGFloat)x index:(int)index {
+- (void)addTagButton{
     
     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.tagsScrollView addSubview:button];
-    button.frame = CGRectMake(x, 0, ZTagButtonWidth, ZTagButtonHeight);
-    [button setTitle:title forState:UIControlStateNormal];
     [button setTitleColor:ZTagButtonColorNormal forState:UIControlStateNormal];
     [button setTitleColor:ZTagButtonColorSelected forState:UIControlStateSelected];
     [button addTarget:self action:@selector(tagButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     button.titleLabel.font = ZTagButtonFontNormal;
     button.adjustsImageWhenHighlighted = NO;
-//    button.backgroundColor = [UIColor yellowColor];
-    button.tag = index;
-    
-    return button;
+    [self.buttons addObject:button];
 }
 
 - (void)setCurrentSelectedButton:(UIButton *)currentSelectedButton {
     
     [self revertButtonAnimation:_currentSelectedButton];
     _currentSelectedButton.selected = NO;
-
+    
     currentSelectedButton.selected = YES;
     _currentSelectedButton = currentSelectedButton;
     
@@ -101,7 +108,7 @@
     self.currentSelectedButton = self.buttons[currentTagIndex];
 }
 
-#pragma mark - 懒加载
+#pragma mark - getter
 - (UIScrollView *)tagsScrollView {
     
     if (_tagsScrollView == nil) {
@@ -119,11 +126,17 @@
         UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
         [self addSubview:button];
         _configButton = button;
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [button setTitle:@"编辑" forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"plus"] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(configButtonClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _configButton;
+}
+
+- (NSMutableArray *)buttons {
+    if (!_buttons) {
+        _buttons = [[NSMutableArray alloc] init];
+    }
+    return _buttons;
 }
 
 #pragma mark - 点击触发事件
@@ -139,18 +152,20 @@
     self.currentSelectedButton = button;
     
     if ([self.tagDelegate respondsToSelector:@selector(tagsView:tagDidSelected:)]) {
-        [self.tagDelegate tagsView:self tagDidSelected:button.tag];
+        [self.tagDelegate tagsView:self tagDidSelected:[self.buttons indexOfObject:button]];
     }
 }
 
 - (void)configButtonClick {
-    ZTagConfigView * configView = [ZTagConfigView tagConfigView];
+    if ([self.tagDelegate respondsToSelector:@selector(tagsViewConfigButtonDidClick:)]) {
+        [self.tagDelegate tagsViewConfigButtonDidClick:self];
+    }
 }
 
 #pragma mark - 按钮动画效果
 - (void)buttonAnimation:(UIButton *)button {
     [UIView animateWithDuration:kAnimationFontDuration animations:^{
-       
+        
         // frame
         button.transform = CGAffineTransformMakeScale(1.5, 1.5);
         
@@ -171,7 +186,7 @@
 }
 
 - (void)moveAnimation:(UIButton *)button {
-
+    
     [UIView animateWithDuration:kAnimationMoveDuration animations:^{
         
         if ([self canMoveToCenterWithCGPoint:button.center]) {

@@ -85,10 +85,6 @@
     
     ZPagesView * pagesView = (ZPagesView *)object;
     if ([keyPath isEqualToString:@"frame"]) {
-        NSLog(@"keyPath - %@", keyPath);
-        NSLog(@"object - %@", object);
-        NSLog(@"change - %@", change);
-        NSLog(@"context - %@", context);
         
         self.contentSize = CGSizeMake(self.cellFrames.count * pagesView.frame.size.width, 0);
         
@@ -125,7 +121,6 @@
 }
 
 
-
 #pragma mark - 公共方法
 - (void)goToPageAtIndex:(NSUInteger)index {
     if (self.cellFrames.count > index) {
@@ -135,8 +130,15 @@
 
 - (void)reloadData {
     
+    [self.reusableCells removeAllObjects];
+    [self.cellFrames removeAllObjects];
+    [self.displayingCells removeAllObjects];
+    self.currentPageIndex = 0;
+    
     self.numberOfCells = [self.dataSource numberOfPagesInPageView:self];
     self.contentSize = CGSizeMake(self.numberOfCells * self.frame.size.width, 0);
+    
+    [self goToPageAtIndex:0];
 }
 
 #pragma mark - 私有方法

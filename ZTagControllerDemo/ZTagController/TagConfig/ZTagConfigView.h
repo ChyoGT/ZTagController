@@ -8,8 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+@class ZTagConfigView;
+
+@protocol ZTagConfigViewDelegate <NSObject>
+- (void)tagConfigView:(ZTagConfigView *)tagConfigView saveTagChangeWithSelectedTags:(NSArray *)selectedTags;
+@end
+
 @interface ZTagConfigView : UIView
 
+@property (nonatomic, weak) id<ZTagConfigViewDelegate> delegate;
+
 + (instancetype)tagConfigView;
+
+- (void)showTagConfigViewWithSelectedTags:(NSArray *)selectedArray tags:(NSArray *)tags;
 
 @end

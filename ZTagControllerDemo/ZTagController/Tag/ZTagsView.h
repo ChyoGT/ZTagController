@@ -14,7 +14,8 @@
 
 @optional
 - (void)tagsView:(ZTagsView *)tagsView tagDidSelected:(NSInteger)selectedIndex;
-- (void)tagsViewSelectedTagDidClick:(ZTagsView *)tagsScrollView;
+- (void)tagsViewSelectedTagDidClick:(ZTagsView *)tagsView;
+- (void)tagsViewConfigButtonDidClick:(ZTagsView *)tagsView;
 
 @end
 
